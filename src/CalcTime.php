@@ -38,10 +38,15 @@ class CalcTime
         return self::$useTime;
     }
 
+    public static function getDuration()
+    {
+        return number_format(self::$useTime * 1000, 5) . 'ms';
+    }
 
     public static function echoUseTime($index = '')
     {
-        echo '消耗时间: ' . $index . ' ' . self::useTime() . "s\n";
+        echo '消耗时间[s]: ' . $index . ' ' . self::useTime() . "s\n";
+        echo '消耗时间[ms]: ' . $index . ' ' . self::getDuration() . "ms\n";
     }
 
 }
