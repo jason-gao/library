@@ -1,8 +1,8 @@
 {
     "name": "jason-gao/library",
-    "description": "guzzleUsing",
-    "homepage": "https://github.com/jason-gao/guzzleUsing",
-    "keywords": ["guzzle"],
+    "description": "php library",
+    "homepage": "https://github.com/jason-gao/library",
+    "keywords": ["php"],
     "type": "library",
     "authors": [
         {

@@ -3,6 +3,7 @@
 /**
  * author:jasong
  */
+
 namespace Library;
 
 /**
@@ -10,17 +11,22 @@ namespace Library;
  * Abstract class for other class extends
  * use: class::singleton()
  */
-abstract class Abstraction {
+abstract class Abstraction
+{
+
     /**
-     * Singleton design pattern
-     * 
-     * @return mixed
+     * @param array $params
+     * @return null|static
+     * @node_name Singleton design pattern
+     * @link
+     * @desc
      */
-    public static function singleton() {
+    public static function singleton($params = [])
+    {
         static $instance = null;
-        
+
         if (null === $instance) {
-            $instance = new static();
+            $instance = $params ? new static($params) : new static();
         }
 
         return $instance;
