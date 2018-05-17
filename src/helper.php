@@ -1,13 +1,16 @@
 <?php
 /**
- * Desc:
+ * Desc: 常用的一些函数
  * Created by PhpStorm.
  * User: jason-gao
  * Date: 2018/2/11 14:55
  */
 
 /**
- * @return bool Whether the host machine is running a Windows OS
+ * @return bool  Whether the host machine is running a Windows OS
+ * @node_name
+ * @link
+ * @desc
  */
 function isWindows()
 {
@@ -145,6 +148,30 @@ function generateRandomStr($length = 20)
 
     return $code;
 }
+
+
+/**
+ * @param $arr1
+ * @param $arr2
+ * @return array
+ * @node_name 取arr1和arr2的交集，并且unset掉arr1的交集，返回arr1
+ * @link
+ * @desc
+ * $http = [80,8080,8080,8081];
+ * $https = [433,8080,30,8081];
+ * $https = array_intersect_unset($https, $http);
+ * print_r($https);
+ */
+function array_intersect_unset($arr1, $arr2)
+{
+    $inspect = array_intersect($arr1, $arr2);
+    $keys    = array_keys($inspect);
+    foreach ($keys as $k) {
+        unset($arr1[$k]);
+    }
+    return array_values($arr1);
+}
+
 
 
 
