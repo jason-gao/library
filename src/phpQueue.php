@@ -10,7 +10,7 @@
 
 namespace Library;
 
-class phpQueue
+class PhpQueue
 {
 
     private $jobQueue;

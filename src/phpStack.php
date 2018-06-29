@@ -9,7 +9,7 @@
 
 namespace Library;
 
-class phpStack
+class PhpStack
 {
 
     private $table;

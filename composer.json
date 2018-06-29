@@ -19,7 +19,7 @@
         "psr-4": {
             "Library\\": "src/"
         },
-        "files": ["helper.php"]
+        "files": ["Helper.php"]
     },
 
     "minimum-stability": "dev"
