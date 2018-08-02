@@ -173,5 +173,33 @@ function array_intersect_unset($arr1, $arr2)
 }
 
 
+/**
+ * @param $cmd
+ * @node_name 后台执行命令
+ * @link
+ * @desc
+ */
+function execInBackground($cmd)
+{
+    if (substr(php_uname(), 0, 7) == "Windows") {
+        pclose(popen("start /B " . $cmd, "r"));
+    } else {
+        exec($cmd . " > /dev/null &");
+    }
+}
+
+
+/**
+ * @param $ip
+ * @return mixed
+ * @node_name ping
+ * @link
+ * @desc
+ */
+function PingUser($ip)
+{
+    return preg_replace(" ms", "", end(explode("/", exec("ping -q -c 1 $ip"))));
+}
+
 
 
