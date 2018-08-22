@@ -39,21 +39,21 @@ function getMxRecords($hostname)
 }
 
 
-//demo
-//$details = array(
-//    array("id" => "1", "name" => "Mike", "num" => ['1' => 'test']),
-//    array("id" => "2", "name" => "Carissa", "num" => "08548596258"),
-//    array("id" => "1", "name" => "Mike", "num" => ['1' => 'test']),
-//);
-//$details = super_unique($details);
-//print_r($details);
-
 /**
  * @param $array
  * @return array
  * @node_name 多维数组去重
  * @link
  * @desc
+ *
+ * //demo
+ * //$details = array(
+ * //    array("id" => "1", "name" => "Mike", "num" => ['1' => 'test']),
+ * //    array("id" => "2", "name" => "Carissa", "num" => "08548596258"),
+ * //    array("id" => "1", "name" => "Mike", "num" => ['1' => 'test']),
+ * //);
+ * //$details = super_unique($details);
+ * //print_r($details);
  */
 function super_unique($array)
 {
@@ -70,31 +70,44 @@ function super_unique($array)
 }
 
 
-/*
- * 二维数组排序
+/**
+ * @param $arr
+ * @param $key
+ * @param string $order
+ * @return array
+ * @node_name 二维数组排序
+ * @link
+ * @desc
  */
 function array_sort($arr, $key, $order = "desc")
 {
-    $keyvalue = $new_arr = array();
+    $keyValue = $new_arr = array();
     foreach ($arr as $k => $v) {
-        $keyvalue[$k] = $v[$key];
+        $keyValue[$k] = $v[$key];
     }
     switch ($order) {
         case "desc":
-            arsort($keyvalue);
+            arsort($keyValue);
             break;
         default:
-            asort($keyvalue);
+            asort($keyValue);
             break;
     }
-    foreach ($keyvalue as $k => $v) {
+    foreach ($keyValue as $k => $v) {
         $new_arr[$k] = $arr[$k];
     }
 
     return array_values($new_arr);
 }
 
-//二维数组去重
+/**
+ * @param $arr
+ * @param $key
+ * @return mixed
+ * @node_name 二维数组去重
+ * @link
+ * @desc
+ */
 function assoc_unique($arr, $key)
 {
     $tmp_arr = array();
@@ -142,9 +155,9 @@ function array_column_group($index_key = 'id', $arr)
  */
 function generateRandomStr($length = 20)
 {
-    $ccid         = str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5));
-    $random_start = mt_rand(0, (strlen($ccid) - $length));
-    $code         = substr($ccid, $random_start, $length);
+    $shuffleStr   = str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5));
+    $random_start = mt_rand(0, (strlen($shuffleStr) - $length));
+    $code         = substr($shuffleStr, $random_start, $length);
 
     return $code;
 }
@@ -202,4 +215,122 @@ function PingUser($ip)
 }
 
 
+/**
+ * @param $arr
+ * @return array
+ * @node_name 过滤空值并且去重
+ * @link
+ * @desc
+ */
+function arrFilterUnique($arr)
+{
+    if (is_array($arr) && $arr) {
+        return array_values(array_unique(array_filter($arr)));
+    }
+
+    return [];
+}
+
+
+/**
+ * @param array $urls
+ * @return array
+ * @node_name 格式化url为path
+ * @link
+ * @desc
+ * //www.a.com/b -> b
+ * http://www.a.com/c  -> /c
+ * www.a.com/f -> /f
+ * /a -> /a
+ */
+function formatUrlToPath($urls = [])
+{
+    $urls      = (array)$urls;
+    $parseUrls = [];
+    foreach ($urls as $url) {
+        if (strpos($url, 'http://') !== 0 && strpos($url, '/') !== 0) {
+            $url = '//' . $url;
+        }
+        $url     = parse_url($url);
+        $content = '';
+        if ($url['path']) {
+            $content .= str_replace(['//'], ['/'], $url['path']);
+        }
+        if ($url['query']) {
+            $content .= '?' . $url['query'];
+        }
+        if ($url['fragment']) {
+            $content .= '#' . $url['fragment'];
+        }
+
+        $parseUrls[] = $content;
+    }
+
+    return arrFilterUnique($parseUrls);
+}
+
+/**
+ * @param array $urls
+ * @return array
+ * @node_name 格式化url为domain
+ * @link
+ * @desc
+ */
+function formatUrlToDomain($urls = [])
+{
+    $urls      = (array)$urls;
+    $parseUrls = [];
+    foreach ($urls as $url) {
+        if (strpos($url, 'http://') !== 0 && strpos($url, '/') !== 0) {
+            $url = '//' . $url;
+        }
+        $url     = parse_url($url);
+        $content = '';
+        if ($url['host']) {
+            $content .= $url['host'];
+        }
+        $parseUrls[] = $content;
+    }
+
+    return arrFilterUnique($parseUrls);
+}
+
+
+/**
+ * @param $haystack
+ * @param $needles
+ * @return bool
+ * @node_name 以字符串开头
+ * @link
+ * @desc
+ */
+function startsWith($haystack, $needles)
+{
+    foreach ((array) $needles as $needle) {
+        if ($needle !== '' && substr($haystack, 0, strlen($needle)) === (string) $needle) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @param $haystack
+ * @param $needles
+ * @return bool
+ * @node_name 以字符串结尾
+ * @link
+ * @desc
+ */
+function endsWith($haystack, $needles)
+{
+    foreach ((array) $needles as $needle) {
+        if (substr($haystack, -strlen($needle)) === (string) $needle) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
