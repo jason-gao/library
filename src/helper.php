@@ -127,17 +127,18 @@ function assoc_unique($arr, $key)
 /**
  * @param string $index_key
  * @param $arr
+ * @param $field //只返回固定字段
  * @return array
  * @node_name 二维数组记录分组
  * @link
  * @desc
  */
-function array_column_group($index_key = 'id', $arr)
+function array_column_group($index_key = 'id', $arr, $field = '')
 {
     if ($arr && is_array($arr)) {
         $res = [];
         foreach ($arr as $k => $v) {
-            $res[$v[$index_key]][] = $v;
+            $res[$v[$index_key]][] = $field ? $v[$field] : $v;
         }
 
         return $res;
@@ -239,6 +240,7 @@ function arrFilterUnique($arr)
  * @link
  * @desc
  * //www.a.com/b -> b
+ * //s?a=1 -> /s?a=1
  * http://www.a.com/c  -> /c
  * www.a.com/f -> /f
  * /a -> /a
@@ -250,6 +252,11 @@ function formatUrlToPath($urls = [])
     foreach ($urls as $url) {
         if (strpos($url, 'http://') !== 0 && strpos($url, '/') !== 0) {
             $url = '//' . $url;
+        }
+        if (strpos($url, '//') === 0) {
+            if (!preg_match('/^\/\/([A-Z0-9][A-Z0-9_-]*(\.[A-Z0-9][A-Z0-9_-]*)*(\.[A-Z]+)+)(:\d+)?/i', $url)) {
+                $url = '/' . ltrim($url, '/');
+            }
         }
         $url     = parse_url($url);
         $content = '';
