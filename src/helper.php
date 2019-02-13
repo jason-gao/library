@@ -1,4 +1,7 @@
 <?php
+
+namespace Library;
+
 /**
  * Desc: 常用的一些函数
  * Created by PhpStorm.
@@ -313,8 +316,8 @@ function formatUrlToDomain($urls = [])
  */
 function startsWith($haystack, $needles)
 {
-    foreach ((array) $needles as $needle) {
-        if ($needle !== '' && substr($haystack, 0, strlen($needle)) === (string) $needle) {
+    foreach ((array)$needles as $needle) {
+        if ($needle !== '' && substr($haystack, 0, strlen($needle)) === (string)$needle) {
             return true;
         }
     }
@@ -332,8 +335,8 @@ function startsWith($haystack, $needles)
  */
 function endsWith($haystack, $needles)
 {
-    foreach ((array) $needles as $needle) {
-        if (substr($haystack, -strlen($needle)) === (string) $needle) {
+    foreach ((array)$needles as $needle) {
+        if (substr($haystack, -strlen($needle)) === (string)$needle) {
             return true;
         }
     }
@@ -341,3 +344,68 @@ function endsWith($haystack, $needles)
     return false;
 }
 
+
+/**
+ * @desc 某一列的类型是多维数组的情况下，取数组一列的值
+ * @param array $data 数组
+ * @param mixed $column 列名
+ * @param mixed $index_key 作为返回数组的索引/键的列，它可以是该列的整数索引，或者字符串键值。
+ * @return array
+ * {
+ * "key_as_string": "2018-10-17 10:00:00",
+ * "key": 1539770400000,
+ * "doc_count": 108,
+ * "line_aggs": {
+ * "value": 1539372
+ * }
+ * },
+ * {
+ * "key_as_string": "2018-10-17 10:01:00",
+ * "key": 1539770460000,
+ * "doc_count": 86,
+ * "line_aggs": {
+ * "value": 3582885
+ * }
+ * },
+ */
+function multi_array_column($data = [], $column = '', $index_key = '')
+{
+    $ret = [];
+    if (!empty($data) && is_array($data) && !empty($column)) {
+        $columns = explode('.', $column);
+        if (1 == count($columns)) {
+            return array_column($data, $column, $index_key);
+        } else {
+            $ret  = $data;
+            $loop = 0;
+            $keys = [];
+            foreach ($columns as $val) {
+                $ret = array_column($ret, $val, !$loop ? $index_key : '');
+                !$loop && $keys = array_keys($ret);
+                $loop++;
+            }
+            empty($keys) && $keys = rand(0, count($ret));
+            $ret = array_combine($keys, $ret);
+        }
+    }
+    return $ret;
+}
+
+
+//根据数组索引前缀对数组进行分组
+function arrayGroupByPrefix($data = [], $prefixes = [])
+{
+    $result = [];
+    if (!empty($data) && is_array($data) && !empty($prefixes)) {
+        !is_array($prefixes) && $prefixes = [$prefixes];
+        foreach ($prefixes as $prefix) {
+            foreach ($data as $key => $val) {
+                if (0 === strpos($key, $prefix)) {
+                    $result[$prefix][substr($key, strlen($prefix))] = $val;
+                    unset($data[$key]);
+                }
+            }
+        }
+    }
+    return $result;
+}
